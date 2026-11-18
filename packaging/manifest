@@ -1,11 +1,11 @@
 appname=magpie
 version=0.1.4406
 display_name=magpie
-desc=Every agent's model in one place: a local gateway that serves your model providers and subscriptions to coding agents.
+desc=统一的本地模型网关：把 Claude Code、Codex、Gemini CLI 等编程 Agent 的模型请求集中到一处，转接到你的订阅账号与 API Key，额度用尽时自动切换下一个账号。
 source=thirdparty
 platform=x86
-maintainer=YUNXI
-maintainer_url=https://github.com/YUNXI-fi/magpie-fnos
+maintainer=yetone
+maintainer_url=https://github.com/yetone/magpie
 distributor=YUNXI
 distributor_url=https://github.com/YUNXI-fi/magpie-fnos
 desktop_uidir=ui
