@@ -1,0 +1,16 @@
+appname=magpie
+version=0.1.4406
+display_name=magpie
+desc=Every agent's model in one place: a local gateway that serves your model providers and subscriptions to coding agents.
+source=thirdparty
+platform=x86
+maintainer=YUNXI
+maintainer_url=https://github.com/YUNXI-fi/magpie-fnos
+distributor=YUNXI
+distributor_url=https://github.com/YUNXI-fi/magpie-fnos
+desktop_uidir=ui
+desktop_applaunchname=magpie.main
+ctl_stop=true
+service_port=3430
+checkport=true
+os_min_version=1.1.3100

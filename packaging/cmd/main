@@ -1,0 +1,99 @@
+#!/bin/bash
+
+BIN="${TRIM_APPDEST}/magpie"
+LOG_FILE="${TRIM_PKGVAR}/service.log"
+PID_FILE="${TRIM_PKGVAR}/app.pid"
+KEY_FILE="${TRIM_PKGVAR}/web.key"
+DATA_HOME="${TRIM_PKGVAR}/home"
+PORT="${TRIM_SERVICE_PORT:-3430}"
+
+log_msg() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "${LOG_FILE}"
+}
+
+is_running() {
+    [ -f "${PID_FILE}" ] || return 1
+    local pid
+    pid=$(tr -d '[:space:]' < "${PID_FILE}")
+    [ -n "${pid}" ] && kill -0 "${pid}" 2>/dev/null
+}
+
+ensure_web_key() {
+    # 优先使用安装向导填写的密钥，并落盘以便后续启动复用
+    if [ -n "${wizard_web_key}" ]; then
+        printf '%s' "${wizard_web_key}" > "${KEY_FILE}"
+    fi
+    if [ ! -s "${KEY_FILE}" ]; then
+        mkdir -p "${TRIM_PKGVAR}"
+        head -c 24 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 24 > "${KEY_FILE}"
+    fi
+    cat "${KEY_FILE}"
+}
+
+start_process() {
+    if is_running; then
+        return 0
+    fi
+
+    if [ ! -x "${BIN}" ]; then
+        echo "magpie binary missing: ${BIN}" > "${TRIM_TEMP_LOGFILE}"
+        return 1
+    fi
+
+    mkdir -p "${DATA_HOME}/.config" "${DATA_HOME}/.cache" "${DATA_HOME}/.local/share" "${DATA_HOME}/.local/state"
+    local key
+    key=$(ensure_web_key)
+
+    log_msg "starting magpie web on 0.0.0.0:${PORT}"
+    (
+        export HOME="${DATA_HOME}"
+        export XDG_CONFIG_HOME="${DATA_HOME}/.config"
+        export XDG_CACHE_HOME="${DATA_HOME}/.cache"
+        export XDG_DATA_HOME="${DATA_HOME}/.local/share"
+        export XDG_STATE_HOME="${DATA_HOME}/.local/state"
+        export MAGPIE_WEB_KEY="${key}"
+        # 网关保持默认 127.0.0.1:3425（仅本机 Agent 可用），网页界面监听 0.0.0.0:3430
+        exec "${BIN}" web --addr "0.0.0.0:${PORT}" --no-open
+    ) >> "${LOG_FILE}" 2>&1 &
+    echo $! > "${PID_FILE}"
+    return 0
+}
+
+stop_process() {
+    if [ -f "${PID_FILE}" ]; then
+        local pid
+        pid=$(tr -d '[:space:]' < "${PID_FILE}")
+        if [ -n "${pid}" ] && kill -0 "${pid}" 2>/dev/null; then
+            log_msg "stopping magpie (pid ${pid})"
+            kill -TERM "${pid}" 2>/dev/null
+            local i=0
+            while kill -0 "${pid}" 2>/dev/null && [ ${i} -lt 15 ]; do
+                sleep 1
+                i=$((i + 1))
+            done
+            kill -KILL "${pid}" 2>/dev/null
+        fi
+        rm -f "${PID_FILE}"
+    fi
+    return 0
+}
+
+case "$1" in
+    start)
+        start_process || exit 1
+        exit 0
+        ;;
+    stop)
+        stop_process
+        exit 0
+        ;;
+    status)
+        if is_running; then
+            exit 0
+        fi
+        exit 3
+        ;;
+    *)
+        exit 1
+        ;;
+esac
