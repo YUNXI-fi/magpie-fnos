@@ -1,8 +1,9 @@
 appname=magpie
-version=0.1.4406
+version=0.1.4407
 display_name=magpie
 desc=统一的本地模型网关：把 Claude Code、Codex、Gemini CLI 等编程 Agent 的模型请求集中到一处，转接到你的订阅账号与 API Key，额度用尽时自动切换下一个账号。
 source=thirdparty
+install_dep_apps=bunjs
 platform=x86
 maintainer=yetone
 maintainer_url=https://github.com/yetone/magpie

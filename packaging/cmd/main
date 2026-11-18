@@ -30,6 +30,21 @@ ensure_web_key() {
     cat "${KEY_FILE}"
 }
 
+# 插件运行时用应用商店的 Bun（install_dep_apps=bunjs），避免 magpie 首次启动自行下载
+resolve_bun() {
+    if [ -n "${MAGPIE_BUN:-}" ] && [ -x "${MAGPIE_BUN}" ]; then
+        return 0
+    fi
+    local candidate
+    for candidate in /var/apps/bunjs/target/bin/bun /var/apps/*/target/bin/bun; do
+        if [ -x "${candidate}" ]; then
+            export MAGPIE_BUN="${candidate}"
+            return 0
+        fi
+    done
+    return 1
+}
+
 start_process() {
     if is_running; then
         return 0
@@ -43,6 +58,12 @@ start_process() {
     mkdir -p "${DATA_HOME}/.config" "${DATA_HOME}/.cache" "${DATA_HOME}/.local/share" "${DATA_HOME}/.local/state"
     local key
     key=$(ensure_web_key)
+
+    if resolve_bun; then
+        log_msg "plugins use bun: ${MAGPIE_BUN}"
+    else
+        log_msg "warning: bun not found, magpie will download one on first plugin use"
+    fi
 
     log_msg "starting magpie web on 0.0.0.0:${PORT}"
     (
