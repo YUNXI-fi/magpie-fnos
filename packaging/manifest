@@ -1,7 +1,7 @@
 appname=magpie
-version=0.1.4408
+version=0.1.4409
 display_name=magpie
-desc=所有编程 Agent 共用一个本地模型网关：Claude Code、Codex、Gemini CLI 等统一接入你的订阅账号与 API Key，额度用完自动切换到下一个账号。
+desc=开源的本地模型网关（MIT）。把 Claude、ChatGPT、Copilot、Gemini 等订阅账号与各厂商 API Key 汇总到 NAS 上的一个地址，支持 Claude、Codex、Gemini、Cursor、Cline 等 Agent 接入，改指该地址即可共用；某个账号额度用尽会自动换下一个，分组还能切到其他模型，Agent 不中断。网关同时兼容 OpenAI、Anthropic、Gemini 三种协议；可选隐私脱敏，让密钥与邮箱在离开 NAS 前就被替换。配置、额度与用量都在本地网页查看。
 source=thirdparty
 install_dep_apps=bunjs
 platform=x86
