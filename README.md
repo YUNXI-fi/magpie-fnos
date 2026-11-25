@@ -16,7 +16,7 @@
 | ARM64 | `magpie-<版本>-fnos-arm64.fpk` |
 
 ```bash
-appcenter-cli install-fpk magpie-0.1.4407-fnos-x86.fpk
+appcenter-cli install-fpk magpie-0.1.4408-fnos-x86.fpk
 ```
 
 安装时会要求填写一段 16–64 位的访问密钥（字母、数字及 `. _ ~ -`），请自行保存。
@@ -47,14 +47,14 @@ bash packaging/build.sh
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `PKG_VERSION` | `0.1.4407` | 应用包版本，用于覆盖安装/升级 |
+| `PKG_VERSION` | `0.1.4408` | 应用包版本，用于覆盖安装/升级 |
 | `MAGPIE_VERSION` | `0.1.4405` | 上游二进制版本 |
 | `MAGPIE_CACHE` | `~/.cache/magpie-fpk` | 下载缓存目录（不写入仓库） |
 
 升级上游：
 
 ```bash
-MAGPIE_VERSION=0.1.45xx PKG_VERSION=0.1.4408 bash packaging/build.sh
+MAGPIE_VERSION=0.1.45xx PKG_VERSION=0.1.4409 bash packaging/build.sh
 ```
 
 ## 目录结构

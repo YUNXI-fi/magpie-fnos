@@ -1,13 +1,13 @@
 #!/bin/bash
 # 构建 magpie 的 fnOS 原生应用包（.fpk），双架构输出到 dist/fnos-<架构>/
 # 用法：bash packaging/build.sh
-#   PKG_VERSION     应用包版本（默认 0.1.4406，用于覆盖安装/升级）
+#   PKG_VERSION     应用包版本（默认 0.1.4408，用于覆盖安装/升级）
 #   MAGPIE_VERSION  上游二进制版本（默认 0.1.4405）
 #   MAGPIE_CACHE    下载缓存目录（默认 ~/.cache/magpie-fpk，不写入仓库）
 set -euo pipefail
 
 APP_NAME=magpie
-PKG_VERSION=${PKG_VERSION:-0.1.4407}
+PKG_VERSION=${PKG_VERSION:-0.1.4408}
 MAGPIE_VERSION=${MAGPIE_VERSION:-0.1.4405}
 FNPACK_VERSION=1.2.3
 
